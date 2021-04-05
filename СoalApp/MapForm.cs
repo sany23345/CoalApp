@@ -34,6 +34,7 @@ namespace СoalApp
         public OrderForm ParentForm1;
         string finalAddress;
         string[] mas = new string[2];
+        bool point = true;
         public MapForm()
         {
             InitializeComponent();
@@ -42,7 +43,6 @@ namespace СoalApp
 
         private void MapForm_Load(object sender, EventArgs e)
         {
-           
             string[] mas = ParentForm1.geoocod.Split(',');
 
             for (int i = 0; i < mas.Length; i++)
@@ -52,7 +52,7 @@ namespace СoalApp
 
             gMapControl1.MapProvider = GMapProviders.GoogleMap;//какая карта 
             GMap.NET.GMaps.Instance.Mode = AccessMode.ServerOnly;
-          
+
             gMapControl1.DragButton = MouseButtons.Left;//на какую кнопку осуществляется перемещение по карте
             gMapControl1.MouseWheelZoomType = MouseWheelZoomType.MousePositionWithoutCenter;
             gMapControl1.ShowCenter = false;
@@ -74,11 +74,12 @@ namespace СoalApp
             gMapMarker.ToolTipText = "Разрез";
             mapOverlay.Markers.Add(gMapMarker);//добавление маркера в масиив           
             gMapControl1.Overlays.Add(mapOverlay);//добавление массива маркеоров на карту
+
         }
 
         private void gMapControl1_Load(object sender, EventArgs e)
         {
-          
+
 
             ////установка маркера разреза
             //PointLatLng point = new PointLatLng(factoryCoalPoints.Lat, factoryCoalPoints.Lng);//создание координат
@@ -86,7 +87,7 @@ namespace СoalApp
             //gMapMarker.ToolTipText = "Разрез";
             //mapOverlay.Markers.Add(gMapMarker);//добавление маркера в масиив           
             //gMapControl1.Overlays.Add(mapOverlay);//добавление массива маркеоров на карту
-           
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -103,11 +104,11 @@ namespace СoalApp
                 else if (GMapOverlayAddress.Markers.Count != 0)
                 {
                     user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
-                }              
+                }
 
                 distance = user.GetDistanceTo(coalMine);
                 distance = Math.Ceiling(distance);
-                label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";         
+                label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
                 ParentForm1.distance = distance / 1000;
                 ParentForm1.Visible = true;
                 this.Close();
@@ -122,12 +123,12 @@ namespace СoalApp
 
         private void gMapControl1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (GMapOverlayAddressDoubleClick.Markers.Count >= 1 )
+            if (point == false)
             {
                 MessageBox.Show("Метка уже установлена!!!");
             }
             else
-            {      
+            {
                 double x = gMapControl1.FromLocalToLatLng(e.X, e.Y).Lat;
                 double y = gMapControl1.FromLocalToLatLng(e.X, e.Y).Lng;
 
@@ -158,7 +159,7 @@ namespace СoalApp
                     foreach (string word in words)
                     {
                         dataMarker += word + ";" + Environment.NewLine;
-                    }                 
+                    }
 
                     gMapControl1.Overlays.Add(GMapOverlayAddressDoubleClick);
                     GMarkerGoogle addresMarker = new GMarkerGoogle(new PointLatLng(x, y), GMarkerGoogleType.red_dot);
@@ -166,7 +167,7 @@ namespace СoalApp
                     addresMarker.ToolTipMode = MarkerTooltipMode.Always;
                     addresMarker.ToolTipText = dataMarker;
                     GMapOverlayAddressDoubleClick.Markers.Add(addresMarker);
-                    
+
                 }
 
                 if (GMapOverlayAddressDoubleClick.Markers.Count != 0)
@@ -181,10 +182,12 @@ namespace СoalApp
                 distance = user.GetDistanceTo(coalMine);
                 distance = Math.Ceiling(distance);
                 label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
+
+                point = false;
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)//очистка маркеров
         {
 
             points.Clear();
@@ -194,16 +197,17 @@ namespace СoalApp
             GMapOverlayAddressDoubleClick.Clear();
 
             //установка маркера разреза        
-            PointLatLng point = new PointLatLng(factoryCoalPoints.Lat, factoryCoalPoints.Lng);//создание координат
-            GMapMarker gMapMarker = new GMarkerGoogle(point, GMarkerGoogleType.red_dot);//создание маркера
+            PointLatLng pointMarker = new PointLatLng(factoryCoalPoints.Lat, factoryCoalPoints.Lng);//создание координат
+            GMapMarker gMapMarker = new GMarkerGoogle(pointMarker, GMarkerGoogleType.red_dot);//создание маркера
             gMapMarker.ToolTipText = "Разрез";
             mapOverlay.Markers.Add(gMapMarker);//добавление маркера в масиив           
             gMapControl1.Overlays.Add(mapOverlay);//добавление массива маркеоров на карту
+            point = true;
         }
 
         private void button2_Click(object sender, EventArgs e)//автоопределение кординат
         {
-            if (points.Count >= 1)
+            if (point == false)
             {
                 MessageBox.Show("Метка уже установлена!!!");
             }
@@ -289,6 +293,8 @@ namespace СoalApp
                         MessageBox.Show(" Координаты не определены");
                     }
                 }
+
+                point = false;
             }
         }
 
@@ -296,7 +302,7 @@ namespace СoalApp
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (GMapOverlayAddress.Markers.Count >= 1 )
+            if (point == false)
             {
                 MessageBox.Show("Метка уже установлена!!!");
             }
@@ -351,7 +357,7 @@ namespace СoalApp
                         addresMarker.ToolTipMode = MarkerTooltipMode.Always;
                         addresMarker.ToolTipText = dataMarker;
                         GMapOverlayAddress.Markers.Add(addresMarker);
-                   
+
                         gMapControl1.Position = new PointLatLng(latitude, longitude);
                     }
 
@@ -365,19 +371,21 @@ namespace СoalApp
                     }
 
                     distance = user.GetDistanceTo(coalMine);
-                    distance = Math.Ceiling(distance);             
+                    distance = Math.Ceiling(distance);
                     label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
                 }
                 else
                 {
                     MessageBox.Show("Напишите адресс!!!");
-                }               
+                }
+
+                point = false;
             }
         }
 
         private void MapForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ParentForm1.Visible = true;        
+            ParentForm1.Visible = true;
         }
     }
 }
