@@ -105,7 +105,7 @@ namespace СoalApp
                                 " Требуемое количество(тонн): " + requiredWeight +
                                 " Адрес доставки: " + address;
                 SMSC smsc = new SMSC();
-                string[] r = smsc.send_sms(telTextBox.Text, zakaz, 1);
+                string[] r = smsc.send_sms("+79134482364", zakaz, 1);
             }
             else
             {

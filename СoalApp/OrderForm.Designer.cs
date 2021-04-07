@@ -92,7 +92,7 @@ namespace СoalApp
             // 
             this.numericUpDown1.Location = new System.Drawing.Point(168, 141);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            40,
+            39,
             0,
             0,
             0});
@@ -130,6 +130,7 @@ namespace СoalApp
             // 
             // stampСoalСomboBox
             // 
+            this.stampСoalСomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.stampСoalСomboBox.FormattingEnabled = true;
             this.stampСoalСomboBox.Location = new System.Drawing.Point(125, 70);
             this.stampСoalСomboBox.Name = "stampСoalСomboBox";
@@ -148,6 +149,7 @@ namespace СoalApp
             // 
             // providerComboBox
             // 
+            this.providerComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.providerComboBox.FormattingEnabled = true;
             this.providerComboBox.Location = new System.Drawing.Point(125, 28);
             this.providerComboBox.Name = "providerComboBox";
@@ -198,6 +200,7 @@ namespace СoalApp
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.toolStrip1.Size = new System.Drawing.Size(552, 25);
             this.toolStrip1.TabIndex = 27;
             this.toolStrip1.Text = "toolStrip1";

@@ -126,5 +126,13 @@ namespace СoalApp
             else
                 e.Handled = true;
         }
+
+        public void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.IsLetter(e.KeyChar) || Char.IsControl(e.KeyChar))
+                e.Handled = false;
+            else
+                e.Handled = true;
+        }
     }
 }

@@ -44,11 +44,14 @@ namespace СoalApp
 
         public void CostDistance()
         {
-            distance = user.GetDistanceTo(coalMine);
-            distance = Math.Ceiling(distance);
-            distance = Math.Round(distance / 1000);
-            ParentForm1.distance = distance;
-            label2.Text = "Растояние:" + distance.ToString() + "км";
+            if (!string.IsNullOrEmpty(textBox1.Text))
+            {
+                distance = user.GetDistanceTo(coalMine);
+                distance = Math.Ceiling(distance);
+                distance = Math.Round(distance / 1000);
+                ParentForm1.distance = distance;
+                label2.Text = "Растояние:" + distance.ToString() + "км";
+            }
         }
 
         private void MapForm_Load(object sender, EventArgs e)//исправить проблему при регистраци

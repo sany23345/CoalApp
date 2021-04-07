@@ -78,6 +78,7 @@ namespace СoalApp
             this.surnameTextBox.Name = "surnameTextBox";
             this.surnameTextBox.Size = new System.Drawing.Size(306, 26);
             this.surnameTextBox.TabIndex = 2;
+            this.surnameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // label1
             // 
@@ -103,6 +104,7 @@ namespace СoalApp
             this.nameTextBox.Name = "nameTextBox";
             this.nameTextBox.Size = new System.Drawing.Size(306, 26);
             this.nameTextBox.TabIndex = 4;
+            this.nameTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // label3
             // 
@@ -119,6 +121,7 @@ namespace СoalApp
             this.patronymicTextBox.Name = "patronymicTextBox";
             this.patronymicTextBox.Size = new System.Drawing.Size(306, 26);
             this.patronymicTextBox.TabIndex = 6;
+            this.patronymicTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBox_KeyPress);
             // 
             // label4
             // 
@@ -134,6 +137,7 @@ namespace СoalApp
             this.addressTextBox.Location = new System.Drawing.Point(346, 31);
             this.addressTextBox.Multiline = true;
             this.addressTextBox.Name = "addressTextBox";
+            this.addressTextBox.ReadOnly = true;
             this.addressTextBox.Size = new System.Drawing.Size(368, 58);
             this.addressTextBox.TabIndex = 8;
             // 
@@ -169,6 +173,7 @@ namespace СoalApp
             // 
             this.passwordTextBox.Location = new System.Drawing.Point(13, 298);
             this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
             this.passwordTextBox.Size = new System.Drawing.Size(306, 26);
             this.passwordTextBox.TabIndex = 12;
             // 
@@ -185,6 +190,7 @@ namespace СoalApp
             // 
             this.passwordAgainTextBox.Location = new System.Drawing.Point(346, 298);
             this.passwordAgainTextBox.Name = "passwordAgainTextBox";
+            this.passwordAgainTextBox.PasswordChar = '*';
             this.passwordAgainTextBox.Size = new System.Drawing.Size(331, 26);
             this.passwordAgainTextBox.TabIndex = 14;
             this.passwordAgainTextBox.TextChanged += new System.EventHandler(this.passwordAgainTextBox_TextChanged);
