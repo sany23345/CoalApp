@@ -65,7 +65,6 @@ namespace СoalApp
             this.gMapControl1.Size = new System.Drawing.Size(1200, 598);
             this.gMapControl1.TabIndex = 4;
             this.gMapControl1.Zoom = 0D;
-            this.gMapControl1.Load += new System.EventHandler(this.gMapControl1_Load);
             this.gMapControl1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.gMapControl1_MouseDoubleClick);
             // 
             // button3
@@ -90,7 +89,7 @@ namespace СoalApp
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 650);
+            this.label2.Location = new System.Drawing.Point(12, 656);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(82, 19);
             this.label2.TabIndex = 14;

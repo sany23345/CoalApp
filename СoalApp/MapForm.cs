@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Net;
 
-
 using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
@@ -28,28 +27,32 @@ namespace СoalApp
         GMapOverlay mapOverlay = new GMapOverlay("markers");//создание массива маркеров
         PointLatLng factoryCoalPoints;//переменная для сохранения точки разреза\
         public double distance;//переменная для сохранения дистанции от меткипользователя до метки разреза
-        GeoCoordinate user;
-        GeoCoordinate coalMine;
+        GeoCoordinate user, coalMine;
         string myAPI = @"AIzaSyBTahSEYrJIElOfmD7bTcSlKDjz9bbFsAM";
         public OrderForm ParentForm1;
+        public RegistrationForm regPrentForm;
         string finalAddress;
         string[] mas = new string[2];
         bool point = true;
+        public string markForm;
+
         public MapForm()
         {
             InitializeComponent();
             points = new List<PointLatLng>();
         }
 
-        private void MapForm_Load(object sender, EventArgs e)
+        public void CostDistance()
         {
-            string[] mas = ParentForm1.geoocod.Split(',');
+            distance = user.GetDistanceTo(coalMine);
+            distance = Math.Ceiling(distance);
+            distance = Math.Round(distance / 1000);
+            ParentForm1.distance = distance;
+            label2.Text = "Растояние:" + distance.ToString() + "км";
+        }
 
-            for (int i = 0; i < mas.Length; i++)
-            {
-                mas[i] = mas[i].Replace('.', ',');
-            }
-
+        private void MapForm_Load(object sender, EventArgs e)//исправить проблему при регистраци
+        {
             gMapControl1.MapProvider = GMapProviders.GoogleMap;//какая карта 
             GMap.NET.GMaps.Instance.Mode = AccessMode.ServerOnly;
 
@@ -65,57 +68,61 @@ namespace СoalApp
             GMapProvider.WebProxy = WebRequest.GetSystemWebProxy();
             GMapProvider.WebProxy.Credentials = CredentialCache.DefaultCredentials;
 
-            factoryCoalPoints = new PointLatLng(Convert.ToDouble(mas[0].ToString()), Convert.ToDouble(mas[1].ToString()));//сохранение координат разреза
-            coalMine = new GeoCoordinate(Convert.ToDouble(mas[0].ToString()), Convert.ToDouble(mas[1].ToString()));
-
-            //установка маркера разреза
-            PointLatLng point = new PointLatLng(factoryCoalPoints.Lat, factoryCoalPoints.Lng);//создание координат
-            GMapMarker gMapMarker = new GMarkerGoogle(point, GMarkerGoogleType.red_dot);//создание маркера
-            gMapMarker.ToolTipText = "Разрез";
-            mapOverlay.Markers.Add(gMapMarker);//добавление маркера в масиив           
-            gMapControl1.Overlays.Add(mapOverlay);//добавление массива маркеоров на карту
-
-        }
-
-        private void gMapControl1_Load(object sender, EventArgs e)
-        {
-
-
-            ////установка маркера разреза
-            //PointLatLng point = new PointLatLng(factoryCoalPoints.Lat, factoryCoalPoints.Lng);//создание координат
-            //GMapMarker gMapMarker = new GMarkerGoogle(point, GMarkerGoogleType.red_dot);//создание маркера
-            //gMapMarker.ToolTipText = "Разрез";
-            //mapOverlay.Markers.Add(gMapMarker);//добавление маркера в масиив           
-            //gMapControl1.Overlays.Add(mapOverlay);//добавление массива маркеоров на карту
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(textBox1.Text))
+            if (markForm == "заказ")
             {
+                string[] mas = ParentForm1.geoocod.Split(',');
 
-                ParentForm1.addres = finalAddress;
-
-                if (GMapOverlayAddressDoubleClick.Markers.Count != 0)
+                for (int i = 0; i < mas.Length; i++)
                 {
-                    user = new GeoCoordinate(GMapOverlayAddressDoubleClick.Markers[0].Position.Lat, GMapOverlayAddressDoubleClick.Markers[0].Position.Lng);
-                }
-                else if (GMapOverlayAddress.Markers.Count != 0)
-                {
-                    user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
+                    mas[i] = mas[i].Replace('.', ',');
                 }
 
-                distance = user.GetDistanceTo(coalMine);
-                distance = Math.Ceiling(distance);
-                label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
-                ParentForm1.distance = distance / 1000;
-                ParentForm1.Visible = true;
-                this.Close();
+                factoryCoalPoints = new PointLatLng(Convert.ToDouble(mas[0].ToString()), Convert.ToDouble(mas[1].ToString()));//сохранение координат разреза
+                coalMine = new GeoCoordinate(Convert.ToDouble(mas[0].ToString()), Convert.ToDouble(mas[1].ToString()));
+
+                //установка маркера разреза
+                PointLatLng point = new PointLatLng(factoryCoalPoints.Lat, factoryCoalPoints.Lng);//создание координат
+                GMapMarker gMapMarker = new GMarkerGoogle(point, GMarkerGoogleType.red_dot);//создание маркера
+                gMapMarker.ToolTipText = "Разрез";
+                mapOverlay.Markers.Add(gMapMarker);//добавление маркера в масиив           
+                gMapControl1.Overlays.Add(mapOverlay);//добавление массива маркеоров на карту
             }
             else
             {
-                MessageBox.Show("Укажите адрес!!!");
+                label2.Visible = false;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)//подтверждение адреса
+        {
+            if (markForm == "заказ")
+            {
+                if (!string.IsNullOrEmpty(textBox1.Text))
+                {
+                    ParentForm1.addres = finalAddress;
+
+                    if (GMapOverlayAddressDoubleClick.Markers.Count != 0)
+                    {
+                        user = new GeoCoordinate(GMapOverlayAddressDoubleClick.Markers[0].Position.Lat, GMapOverlayAddressDoubleClick.Markers[0].Position.Lng);
+                    }
+                    else if (GMapOverlayAddress.Markers.Count != 0)
+                    {
+                        user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
+                    }
+
+                    ParentForm1.Visible = true;
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Укажите адрес!!!");
+                }
+            }
+            else if (markForm == "регистрация")
+            {
+                regPrentForm.regAddress = finalAddress;
+                regPrentForm.Visible = true;
+                this.Close();
             }
         }
 
@@ -167,7 +174,6 @@ namespace СoalApp
                     addresMarker.ToolTipMode = MarkerTooltipMode.Always;
                     addresMarker.ToolTipText = dataMarker;
                     GMapOverlayAddressDoubleClick.Markers.Add(addresMarker);
-
                 }
 
                 if (GMapOverlayAddressDoubleClick.Markers.Count != 0)
@@ -179,17 +185,17 @@ namespace СoalApp
                     user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
                 }
 
-                distance = user.GetDistanceTo(coalMine);
-                distance = Math.Ceiling(distance);
-                label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
-
                 point = false;
+
+                if (markForm=="заказ")
+                {
+                    CostDistance();
+                }
             }
         }
 
         private void button1_Click(object sender, EventArgs e)//очистка маркеров
         {
-
             points.Clear();
             gMapControl1.Overlays.Clear();
             mapOverlay.Clear();
@@ -283,10 +289,6 @@ namespace СoalApp
                         {
                             user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
                         }
-
-                        distance = user.GetDistanceTo(coalMine);
-                        distance = Math.Ceiling(distance);
-                        label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
                     }
                     else
                     {
@@ -295,12 +297,17 @@ namespace СoalApp
                 }
 
                 point = false;
+
+                if (markForm == "заказ")
+                {
+                    CostDistance();
+                }
             }
         }
 
         GMapOverlay GMapOverlayAddress = new GMapOverlay("address");
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e)//уставновка метки по адресу
         {
             if (point == false)
             {
@@ -369,23 +376,39 @@ namespace СoalApp
                     {
                         user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
                     }
-
-                    distance = user.GetDistanceTo(coalMine);
-                    distance = Math.Ceiling(distance);
-                    label2.Text = "Расстояние:" + (distance / 1000).ToString() + "км";
                 }
                 else
                 {
                     MessageBox.Show("Напишите адресс!!!");
                 }
-
                 point = false;
+
+                if (markForm == "заказ")
+                {
+                    CostDistance();
+                }
             }
         }
 
         private void MapForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ParentForm1.Visible = true;
+            if (markForm == "заказ")
+            {
+                ParentForm1.Visible = true;
+            }
+            else
+            {
+                regPrentForm.Visible = true;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)//расчет дистанции
+        {
+            //distance = user.GetDistanceTo(coalMine);
+            //distance = Math.Ceiling(distance);
+            //distance = Math.Round(distance / 1000);
+            //ParentForm1.distance = distance;
+            //label2.Text = "Растояние:" + distance.ToString() + "км";
         }
     }
 }

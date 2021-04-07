@@ -30,7 +30,7 @@ namespace СoalApp
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.telTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.providerTextBox = new System.Windows.Forms.TextBox();
             this.stampTextBox = new System.Windows.Forms.TextBox();
@@ -64,15 +64,15 @@ namespace СoalApp
             this.label1.TabIndex = 0;
             this.label1.Text = "Введите свой номер телефона для подтверждения заказа";
             // 
-            // textBox1
+            // telTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 307);
-            this.textBox1.MaxLength = 12;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(377, 26);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            this.telTextBox.Location = new System.Drawing.Point(12, 307);
+            this.telTextBox.MaxLength = 12;
+            this.telTextBox.Name = "telTextBox";
+            this.telTextBox.Size = new System.Drawing.Size(377, 26);
+            this.telTextBox.TabIndex = 1;
+            this.telTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.telTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // label2
             // 
@@ -285,14 +285,14 @@ namespace СoalApp
             this.Controls.Add(this.label3);
             this.Controls.Add(this.providerTextBox);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.telTextBox);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ConfirmationForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Подтверждение заказа";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConfirmationForm_FormClosed);
-            this.Load += new System.EventHandler(this.ConfirmationForm_Load);
             this.VisibleChanged += new System.EventHandler(this.ConfirmationForm_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -302,7 +302,7 @@ namespace СoalApp
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox telTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox providerTextBox;
         private System.Windows.Forms.TextBox stampTextBox;

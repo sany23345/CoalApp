@@ -15,22 +15,21 @@ namespace СoalApp
         public Form parentForm;
 
         public string provider, stamp, distance, address, pricePerTon,
-                      requiredWeight, fullPrice, shippingCost;
+                      requiredWeight, fullPrice, shippingCost,tel;
         int password;
 
 
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (Char.IsLetter(e.KeyChar))
+            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+            else
             {
                 e.Handled = true;
             }
-        }
-
-        private void ConfirmationForm_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -42,15 +41,15 @@ namespace СoalApp
 
             try
             {
-                if (textBox1.Text == "8")
-                    textBox1.Text = "+7";
-                if (textBox1.Text == "+")
-                    textBox1.Text = "+7";
-                if (textBox1.Text == "7")
-                    textBox1.Text = "+7";
-                if (int.Parse(textBox1.Text) >= 0 && int.Parse(textBox1.Text) <= 9)
-                    textBox1.Text = "+7";
-                textBox1.SelectionStart = textBox1.Text.Length;
+                if (telTextBox.Text == "8")
+                    telTextBox.Text = "+7";
+                if (telTextBox.Text == "+")
+                    telTextBox.Text = "+7";
+                if (telTextBox.Text == "7")
+                    telTextBox.Text = "+7";
+                if (int.Parse(telTextBox.Text) >= 0 && int.Parse(telTextBox.Text) <= 9)
+                    telTextBox.Text = "+7";
+                telTextBox.SelectionStart = telTextBox.Text.Length;
             }
             catch (Exception) { }
         }
@@ -65,6 +64,7 @@ namespace СoalApp
             requiredWeightTextBox.Text = requiredWeight;
             fullPriceTextBox.Text = fullPrice;
             shippingCostTextBox.Text = shippingCost;
+            telTextBox.Text = tel;
         }
 
         public ConfirmationForm()
@@ -74,12 +74,12 @@ namespace СoalApp
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length == 12)
+            if (telTextBox.Text.Length == 12)
             {
                 Random random = new Random();
                 password = random.Next(10000, 99999);
                 SMSC smsc = new SMSC();
-                string[] r = smsc.send_sms(textBox1.Text, "Код для подтверждения заказа: " + password, 1);
+                string[] r = smsc.send_sms(telTextBox.Text, "Код для подтверждения заказа: " + password, 1);
                 MessageBox.Show("Код для подтверждения отправлен.");
             }
             else
@@ -104,9 +104,8 @@ namespace СoalApp
                                 " Марка угля: " + stamp +
                                 " Требуемое количество(тонн): " + requiredWeight +
                                 " Адрес доставки: " + address;
-                textBox2.Text = zakaz;
                 SMSC smsc = new SMSC();
-                string[] r = smsc.send_sms(textBox1.Text, zakaz, 1);
+                string[] r = smsc.send_sms(telTextBox.Text, zakaz, 1);
             }
             else
             {
