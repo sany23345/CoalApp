@@ -379,13 +379,13 @@ namespace СoalApp
                     {
                         user = new GeoCoordinate(GMapOverlayAddress.Markers[0].Position.Lat, GMapOverlayAddress.Markers[0].Position.Lng);
                     }
+                    point = false;
                 }
                 else
                 {
                     MessageBox.Show("Напишите адресс!!!");
                 }
-                point = false;
-
+               
                 if (markForm == "заказ")
                 {
                     CostDistance();
@@ -403,15 +403,6 @@ namespace СoalApp
             {
                 regPrentForm.Visible = true;
             }
-        }
-
-        private void button5_Click(object sender, EventArgs e)//расчет дистанции
-        {
-            //distance = user.GetDistanceTo(coalMine);
-            //distance = Math.Ceiling(distance);
-            //distance = Math.Round(distance / 1000);
-            //ParentForm1.distance = distance;
-            //label2.Text = "Растояние:" + distance.ToString() + "км";
         }
     }
 }

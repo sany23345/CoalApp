@@ -23,12 +23,12 @@ namespace СoalApp
         double shippingCost, fullSumma;
         string[] mas;
         static string connect = @"Data Source=DESKTOP-DJUDJM1\SQLEXPRESS;Initial Catalog=BD_Coal;Integrated Security=True";
-        string myAPI = @"AIzaSyBTahSEYrJIElOfmD7bTcSlKDjz9bbFsAM";
         SqlConnection SqlConnection = new SqlConnection(connect);
+        string myAPI = @"AIzaSyBTahSEYrJIElOfmD7bTcSlKDjz9bbFsAM";
         DataTable dataTableProvider = new DataTable();
         DataTable dataTableStanp = new DataTable();
         GeoCoordinate user, coalMine;
-
+        int count=0;
         public OrderForm()
         {
             InitializeComponent();
@@ -172,6 +172,7 @@ namespace СoalApp
 
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(qure, SqlConnection);
                 dataAdapter.Fill(dataTableStanp);
+               
 
                 //заполнение данными СomboBox для марки угля
                 stampСoalСomboBox.DataSource = dataTableStanp;
@@ -184,6 +185,23 @@ namespace СoalApp
             GetCoordinate();//Метод для получения координат и расчета дистанции
             FullSumma();//метод для рачета полной суммы заказа
         }
+
+        private void OrderForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.D0)
+            {
+                count++;
+                if (count == 4)
+                {
+                    OperatorForm operatorForm  = new OperatorForm();
+                    operatorForm.orderForm = this;
+                    operatorForm.Visible=true;
+                    this.Visible = false;
+                    count = 0;
+                }
+            }
+        }
+
         private void stampСoalСomboBox_SelectedValueChanged(object sender, EventArgs e)//событие при выборе марки угля
         {
             if (stampСoalСomboBox.SelectedIndex != -1)

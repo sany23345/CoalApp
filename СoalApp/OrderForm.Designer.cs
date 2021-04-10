@@ -238,12 +238,14 @@ namespace СoalApp
             this.Controls.Add(this.label1);
             this.Controls.Add(this.providerComboBox);
             this.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "OrderForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OrderForm";
             this.Load += new System.EventHandler(this.OrderForm_Load);
             this.VisibleChanged += new System.EventHandler(this.OrderForm_VisibleChanged);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OrderForm_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
