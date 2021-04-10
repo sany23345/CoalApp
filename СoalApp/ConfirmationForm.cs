@@ -21,7 +21,6 @@ namespace СoalApp
         static string connect = @"Data Source=DESKTOP-DJUDJM1\SQLEXPRESS;Initial Catalog=BD_Coal;Integrated Security=True";
         SqlConnection sqlConnection = new SqlConnection(connect);
 
-
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar))
@@ -81,8 +80,8 @@ namespace СoalApp
             {
                 Random random = new Random();
                 password = random.Next(10000, 99999);
-                //SMSC smsc = new SMSC();
-                //string[] r = smsc.send_sms(telTextBox.Text, "Код для подтверждения заказа: " + password, 1);
+                SMSC smsc = new SMSC();
+                string[] r = smsc.send_sms(telTextBox.Text, "Код для подтверждения заказа: " + password, 1);
                 MessageBox.Show("Код для подтверждения отправлен.");
                 textBox10.Enabled = true;
             }
@@ -93,17 +92,15 @@ namespace СoalApp
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox10.Text  == "1111" /*password.ToString()*/)
+            if (textBox10.Text  == password.ToString())
             {
-
-                //string zakaz = "Заказ угля: " +
-                //                " Поставщик: " + provider +
-                //                " Марка угля: " + stamp +
-                //                " Требуемое количество(тонн): " + requiredWeight +
-                //                " Адрес доставки: " + address;
-                //SMSC smsc = new SMSC();
-                //string[] r = smsc.send_sms("+79134482364", zakaz, 1);
-
+                string zakaz = "Заказ угля: " +
+                                " Поставщик: " + provider +
+                                " Марка угля: " + stamp +
+                                " Требуемое количество(тонн): " + requiredWeight +
+                                " Адрес доставки: " + address;
+                SMSC smsc = new SMSC();
+                string[] r = smsc.send_sms("+79628003000", zakaz, 1);
 
                 string zapros = @"Select Поставляемый_уголь.id,Марки_угля.Наименование_марки,Поставщики.Наименование from Поставляемый_уголь
                     inner join Марки_угля on Марки_угля.id=Поставляемый_уголь.id_Угля
