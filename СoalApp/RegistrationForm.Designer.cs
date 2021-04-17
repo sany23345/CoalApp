@@ -153,7 +153,7 @@ namespace СoalApp
             // telTextBox
             // 
             this.telTextBox.Location = new System.Drawing.Point(13, 228);
-            this.telTextBox.MaxLength = 12;
+            this.telTextBox.MaxLength = 20;
             this.telTextBox.Name = "telTextBox";
             this.telTextBox.Size = new System.Drawing.Size(306, 26);
             this.telTextBox.TabIndex = 10;

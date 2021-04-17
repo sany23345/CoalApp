@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,31 +14,34 @@ namespace СoalApp
 {
     public partial class AuthorizationForm : Form
     {
-        static string connect = @"Data Source=DESKTOP-DJUDJM1\SQLEXPRESS;Initial Catalog=BD_Coal;Integrated Security=True";
-        SqlConnection SqlConnection = new SqlConnection(connect);
+        static string connect = "Data Source=bd_coal.db;Version=3";
+        SQLiteConnection sQLiteConnection = new SQLiteConnection(connect);
         DataTable dataTable = new DataTable();
         public OrderForm parentsForm;
 
         public AuthorizationForm()
         {
             InitializeComponent();
+            //string path = Path.Combine(Directory.GetParent(Application.StartupPath).FullName, "Debug\\Database1.mdf");
+            //connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + path + ";Integrated Security=True;Connect Timeout=30";
+            //SqlConnection = new SqlConnection(connect);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(telTextBox.Text) && !string.IsNullOrWhiteSpace(passwordTextBox.Text))//проверка на то что бы все данные были заполнен
             {
-                SqlConnection.Open();
+                sQLiteConnection.Open();
                 string command = @"Select * From Клиенты
                                    where Номер_телефона='" + telTextBox.Text + "' and Пароль='" + passwordTextBox.Text + "'";
 
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(command, SqlConnection);
+                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(command, sQLiteConnection);
                 dataAdapter.Fill(dataTable);
 
                 if (dataTable.Rows.Count == 0)//если не находит выдает сообщение
                 {
                     MessageBox.Show("Данные введены не правильно!!!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    SqlConnection.Close();
+                    sQLiteConnection.Close();
                 }
                 else
                 {
@@ -45,7 +49,7 @@ namespace СoalApp
                     parentsForm.addres = dataTable.Rows[0]["Адрес"].ToString();
                     parentsForm.tel = dataTable.Rows[0]["Номер_телефона"].ToString();
                     parentsForm.Visible=true;
-                    SqlConnection.Close();
+                    sQLiteConnection.Close();
                 }
             }
             else

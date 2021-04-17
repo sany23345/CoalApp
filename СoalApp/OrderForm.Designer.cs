@@ -92,7 +92,7 @@ namespace СoalApp
             // 
             this.numericUpDown1.Location = new System.Drawing.Point(168, 141);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            39,
+            40,
             0,
             0,
             0});

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,8 +19,9 @@ namespace СoalApp
         public string provider, stamp, distance, address, pricePerTon,
                       requiredWeight, fullPrice, shippingCost,tel;
         int password;
-        static string connect = @"Data Source=DESKTOP-DJUDJM1\SQLEXPRESS;Initial Catalog=BD_Coal;Integrated Security=True";
-        SqlConnection sqlConnection = new SqlConnection(connect);
+        static string connect = "Data Source=bd_coal.db;Version=3";
+        SQLiteConnection sQLiteConnection = new SQLiteConnection(connect);
+    
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -72,6 +74,9 @@ namespace СoalApp
         public ConfirmationForm()
         {
             InitializeComponent();
+            //string path = Path.Combine(Directory.GetParent(Application.StartupPath).FullName, "Debug\\Database1.mdf");
+            //connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + path + ";Integrated Security=True;Connect Timeout=30";
+            //sqlConnection = new SqlConnection(connect);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -92,7 +97,7 @@ namespace СoalApp
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox10.Text  == password.ToString())
+            if (textBox10.Text  ==  password.ToString())
             {
                 string zakaz = "Заказ угля: " +
                                 " Поставщик: " + provider +
@@ -107,24 +112,25 @@ namespace СoalApp
                     inner join Поставщики on Поставщики.id=Поставляемый_уголь.id_Поставщика
                     where Поставщики.Наименование='"+providerTextBox.Text+"' and Марки_угля.Наименование_марки='"+stampTextBox.Text+"'";
                 DataTable dtProvCoalId = new DataTable();
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(zapros,sqlConnection);
+                SQLiteDataAdapter sqlDataAdapter = new SQLiteDataAdapter(zapros, sQLiteConnection);
                 sqlDataAdapter.Fill(dtProvCoalId);
                 string provCoalId = dtProvCoalId.Rows[0][0].ToString();
+              
 
                 zapros = @"select MAX(id) from Заказы";
                 DataTable dtZakazId = new DataTable();
-                sqlDataAdapter = new SqlDataAdapter(zapros, sqlConnection);
-                sqlDataAdapter.Fill(dtProvCoalId);
-                int zakazId = int.Parse(dtProvCoalId.Rows[0][0].ToString());
+                sqlDataAdapter = new SQLiteDataAdapter(zapros, sQLiteConnection);
+                sqlDataAdapter.Fill(dtZakazId);
+                int zakazId = int.Parse(dtZakazId.Rows[0][0].ToString());
                 zakazId++;
 
-                zapros = @"Insert Into Заказы values('" + zakazId + "','" + telTextBox.Text + "','" + DateTime.Now.ToString("yyyyMMdd HH:mm:00") + "','" + fullPriceTextBox.Text + "','" + addressTextBox.Text + "','" + shippingCostTextBox.Text + "');" +
+                zapros = @"Insert Into Заказы(id,Номер_телефона_клиента,Дата_заказа,Общая_цена,Адресс_доставки,Сумма_доставки) values('" + zakazId + "','" + telTextBox.Text + "','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:00") + "','" + fullPriceTextBox.Text + "','" + addressTextBox.Text + "','" + shippingCostTextBox.Text + "');" +
                            " insert into Содержимое_заказа(id_Заказа,id_поставляемого_угля,Количество_тонаж,Сумма) values('" + zakazId + "', '" + provCoalId + "','" + requiredWeightTextBox.Text + "','" + double.Parse(requiredWeightTextBox.Text) * double.Parse(pricePerTonTextBox.Text) + "');" ;
 
-                SqlCommand sqlCommand = new SqlCommand(zapros,sqlConnection);
-                sqlConnection.Open();
+                SQLiteCommand sqlCommand = new SQLiteCommand(zapros, sQLiteConnection);
+                sQLiteConnection.Open();
                 sqlCommand.ExecuteNonQuery();
-                sqlConnection.Close();
+                sQLiteConnection.Close();
 
                 MessageBox.Show("Ваш заказ принят!!!");
                 this.Close();

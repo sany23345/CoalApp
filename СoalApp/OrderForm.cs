@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ using System.IO;
 using System.Xml;
 using GMap.NET;
 
+
 namespace СoalApp
 {
     public partial class OrderForm : Form
@@ -22,8 +23,10 @@ namespace СoalApp
         public double distance;
         double shippingCost, fullSumma;
         string[] mas;
-        static string connect = @"Data Source=DESKTOP-DJUDJM1\SQLEXPRESS;Initial Catalog=BD_Coal;Integrated Security=True";
-        SqlConnection SqlConnection = new SqlConnection(connect);
+      
+
+        static string connect= "Data Source=bd_coal.db;Version=3";     
+        SQLiteConnection sQLiteConnection = new SQLiteConnection(connect);
         string myAPI = @"AIzaSyBTahSEYrJIElOfmD7bTcSlKDjz9bbFsAM";
         DataTable dataTableProvider = new DataTable();
         DataTable dataTableStanp = new DataTable();
@@ -37,7 +40,7 @@ namespace СoalApp
         public void FullSumma()//метод для рачета полной стоимости заказа
         {
             label7.Text = "Растояние: " + Math.Round(distance) + " км";
-
+            
             //от 1т до 3 - 10 р за километр
             //от 4т до 7т 15 р за километр
             //от 8т до 20т 35 р за километр
@@ -65,7 +68,7 @@ namespace СoalApp
             {
                 costDeliver = 35;
             }
-            else if (quantity >= 21 && quantity < 40)
+            else if (quantity >= 21 && quantity <= 40)
             {
                 costDeliver = 80;
             }
@@ -153,11 +156,12 @@ namespace СoalApp
         private void OrderForm_Load(object sender, EventArgs e)//событие при загрузке формы
         {
             string qure = "Select * from Поставщики";
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(qure, SqlConnection);
+            SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(qure, sQLiteConnection);
             dataAdapter.Fill(dataTableProvider);
             providerComboBox.DataSource = dataTableProvider;
             providerComboBox.DisplayMember = "Наименование";
             providerComboBox.ValueMember = "id";
+            
         }
 
         private void providerComboBox_SelectionChangeCommitted(object sender, EventArgs e)
@@ -170,7 +174,7 @@ namespace СoalApp
                                inner join Марки_угля on Марки_угля.id=Поставляемый_уголь.id_Угля
                                where Поставляемый_уголь.id_Поставщика='" + providerComboBox.SelectedValue.ToString() + "'";
 
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(qure, SqlConnection);
+                SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(qure, sQLiteConnection);
                 dataAdapter.Fill(dataTableStanp);
                
 

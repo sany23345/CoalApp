@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+
+using System.Data.SQLite;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +17,14 @@ namespace СoalApp
     {
         public  Form formParent;
         public string regAddress;
-        static string connect = @"Data Source=DESKTOP-DJUDJM1\SQLEXPRESS;Initial Catalog=BD_Coal;Integrated Security=True";
-        SqlConnection sqlConnection = new SqlConnection(connect);
-
+        static string connect = "Data Source=bd_coal.db;Version=3";
+        SQLiteConnection sQLiteConnection = new SQLiteConnection(connect);
         public RegistrationForm()
         {
             InitializeComponent();
+            //string path = Path.Combine(Directory.GetParent(Application.StartupPath).FullName, "Debug\\Database1.mdf");
+            //connect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + path + ";Integrated Security=True;Connect Timeout=30";
+            //sqlConnection = new SqlConnection(connect);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -82,11 +86,11 @@ namespace СoalApp
             {
                 if (passwordTextBox.Text == passwordAgainTextBox.Text)
                 {
-                    sqlConnection.Open();
-                    string zapros = @"Insert Into  Клиенты  values('" + telTextBox.Text + "','" + surnameTextBox.Text + " " + nameTextBox.Text + " " + patronymicTextBox.Text + "','" + addressTextBox.Text + "','" + passwordAgainTextBox.Text + "')";
-                    SqlCommand sqlCommand = new SqlCommand(zapros, sqlConnection);
+                    sQLiteConnection.Open();
+                    string zapros = @"Insert Into  Клиенты (Номер_телефона,ФИО,Адрес,Пароль)  values('" + telTextBox.Text + "','" + surnameTextBox.Text + " " + nameTextBox.Text + " " + patronymicTextBox.Text + "','" + addressTextBox.Text + "','" + passwordAgainTextBox.Text + "')";
+                    SQLiteCommand sqlCommand = new SQLiteCommand(zapros, sQLiteConnection);
                     sqlCommand.ExecuteNonQuery();
-                    sqlConnection.Close();
+                    sQLiteConnection.Close();
                     MessageBox.Show("Реистрация прошла успешно");
                     this.Visible = false;
                     formParent.Visible = true;
